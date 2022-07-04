@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    
+    <title>나만의 조건식 검증 - 김주식</title>
+    <!-- {% load static %} -->
+    <link rel="stylesheet" href="static/css/main.css">
+</head>
+<body>
+    <div class="container main_container">
+        <header class="d-flex main_header col-10 m-auto mt-4">
+            <div class="col-7">
+                <h2 style="font-weight: bold; margin-bottom: 17px;" >
+                    <span>KIM 주식</span> 간단 사용 방법
+                </h2>
+                <ol type="1">
+                    <li>
+                        이 <a href="">csv파일</a>의 양식을 사용해서 csv파일을 만들어주세요
+                    </li>
+                    <li>
+                        만든 csv 파일을 아래 업로드 버튼을 통해 선택해주세요
+                    </li>
+                    <li>
+                        선택 후 분석은 자동으로 실행됩니다 :)
+                    </li>
+                </ol>
+            </div>
+            <div class="col-3 logo_box">
+                <a href="main.html"><img src="static/image/logo.png" alt="logo" style="width: 12rem;"></a>
+            </div>
+        </header>
+        <head>
+            <div>
+                <!-- tmp_divs -->
+            </div>
+        </head>
+        <main class="d-flex main_box col-10 m-auto">
+            <div class="sticky-top file_box col-3">
+                <div class=''>
+                    <div>
+                        <div class="" style="text-align: center; font-size: 13px; margin-top: 14px; font-weight: 700;">
+                            csv 파일
+                            <a href=""><img src="static/image/excel.png" alt="excel" style="width: 20px; padding-bottom: 5px;"></a>
+                            업로드 양식    
+                        </div>
+                        <div class="filebox" style="margin-top: 42px;">
+                            <label for="upload_file">업로드</label>
+                            <input type="file" id="upload_file" accept=".csv"> 
+                        </div>
+                        <div class='file_text'>
+                            <span>csv 파일로 업로드 해주세요</span>
+                        </div>
+                    </div>
+                    <!-- <div>
+                        <a href="" title="Button push blue/green" class="button btnPush btnBlueGreen">분석 시작</a>
+                    </div> -->
+                </div>
+                <div class="feedback_box">
+                    <p style="font-weight: bold; margin-top: 24px; font-size: 20px;">
+                        FeedBack
+                    </p>
+                    <div style="font-size: 11px;">
+                        필요하신 기능이 있으시면 <br>아래 이메일로 언제든지 연락주세요.
+                    </div>
+                    <div>
+                        <a href="mailto:whdhgtpgml@gmail.com" type="" style="font-size: 12px; padding-top: 8px;">whdghtpgml@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+            <div class="statics col-9">
+                <div class="col-11 static_box">
+                    진단
+                </div>
+                <div class="col-11 static_box">
+                    차트
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    
+    <script>
+    $( function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    } );
+    </script>
+
+</body>
+</html>
