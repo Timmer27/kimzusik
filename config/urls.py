@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('kimzusik.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#파일 다운을 위한 media 루트 설정
 
 handler404 = 'common.views.page_not_found'
 #handler500 = 'common.views.page_not_found_five'
