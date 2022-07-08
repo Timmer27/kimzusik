@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 
-class testing(models.Model):
+class stock_csv(models.Model):
     symbol = models.CharField(max_length=12)
     date = models.CharField(max_length=15)
 

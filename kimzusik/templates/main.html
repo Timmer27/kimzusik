@@ -9,7 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     
-    <title>나만의 조건식 검증 - 김주식</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <!--<link rel="stylesheet" href="static/css/main.css">-->
 </head>
@@ -51,11 +50,14 @@
                             업로드 양식    
                         </div>
                         <div class="filebox" style="margin-top: 42px;">
-                            <label for="upload_file">업로드</label>
-                            <input type="file" id="upload_file" accept=".csv"> 
+                            <div class="col-12 d-flex mb-2" style="padding: 0px 15px; justify-content: center;">
+                                <label for="upload_file" style="margin: 0;">업로드</label>
+                                <input type="file" id="upload_file" accept=".csv" name="upload_file"> 
+                                <button class="btn btn-primary loading">실행</button>
+                            </div>
                         </div>
                         <div class='file_text'>
-                            <span>csv 파일로 업로드 해주세요</span>
+                            <span style="color: #626262;">csv 파일로 업로드 해주세요</span>
                         </div>
                     </div>
                     <!-- <div>
@@ -74,26 +76,131 @@
                     </div>
                 </div>
             </div>
-            <div class="statics col-9">
-                <div class="col-11 static_box">
-                    진단
+            <div class="col-9">
+                <div class="statics col-12">
+                    <div class="col-11 static_box" style="text-align: start; padding: 15px 0px;">
+                        <p style="font-size: 18px; font-weight: bold;">
+                            주의할 점
+                        </p>
+                        <div>
+                            <span class="warning_text">
+                                종가매매를 원칙으로 하는 계산입니다.
+                            </span>
+                            <br>
+                            <span class="warning_text">
+                                분석 데이터는 최소 15개 이상을 추천드립니다.
+                            </span>
+                            <br>
+                            <span class="warning_text">
+                                과도한 데이터 개수로 분석 시 1시간 이상 소요될 수 있습니다.
+                            </span>
+                            <br>
+                            <span class="warning_text">
+                                과거 데이터를 기반으로 한 분석이므로 투자 참고용으로만 사용을 권장드립니다.
+                            </span>
+                        </div>
+                        
+                    </div>
                 </div>
-                <div class="col-11 static_box">
-                    차트
+                <div class="statics col-12">
+                    test
                 </div>
+
             </div>
         </main>
     </div>
     
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     
     <script>
-    $( function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    } );
+        //파일 업로드 버튼 누르면 handleFileSelect 함수 호출 
+        $(function init(){
+            document.getElementById('upload_file').addEventListener('change', handleFileSelect, false);
+        });
+
+        function handleFileSelect(event){
+            const reader = new FileReader()
+            // alert('test')
+            //handleFileLoad 함수 호출
+            reader.onload = handleFileLoad;
+            reader.readAsText(event.target.files[0])
+            
+        }
+
+        //csv 데이터 형식을 json으로 변경 
+        function csvJSON(csv){
+            var lines = csv.split("\n");
+            var result = [];
+            var headers=lines[0].split(",");
+            for(var i=1;i<lines.length;i++){
+                var obj = {};
+                var currentline=lines[i].split(",");
+                for(var j=0;j<headers.length;j++){
+                    obj[headers[j]] = currentline[j];
+                }
+                result.push(obj);
+            }
+            return JSON.stringify(result); //JSON
+        }
+
+        function handleFileLoad(event){
+
+            let uploaded = event.target.result;
+            //csv형식 data를 json으로 변형
+            let uploaded_data = csvJSON(uploaded)
+            // alert(uploaded_data)
+            
+            $.ajax({
+                //요청이 전송될 URL 주소
+                url: 'ajax_csv/',
+                type: "POST",
+                dataType: "text",
+                data: {
+                    'upload_data': uploaded_data,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                
+                success : function(data) {
+                    $('.static_box').html(data)
+                    // const port_data = JSON.stringify(data);
+                    // var port_data_json = JSON.parse(port_data);
+                },
+                error:function(request,status,error){
+                    // $('.static_box').html(request.responseText)
+                    // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+                    }
+                });
+            
+            }
+
     </script>
+
+    <style>
+        .loading{
+            width: 5em;
+            margin: 0px 5px;
+            height: 35px;
+            font-size: 13px;
+            font-weight: bold;
+
+            background: #505b6a !important;
+            border: #505b6a !important;
+        }
+        .loading:hover{
+            background: black !important;
+        }
+
+        .warning_text{
+            font-size: 12px;
+            color: #4c4545;
+        }
+        
+
+
+    </style>
 
 </body>
 </html>
