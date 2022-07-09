@@ -28,6 +28,8 @@ def main(request):
 result_cols = ['one_day_trade_result', 'seven_trade_result', 'fourteen_trade_result']
 
 def ajax_csv(request):
+    data_dict = {}
+
     if request.method == 'POST':
         #javascrpit에서 데이터를 가져와 DataFrame으로 변형(데이터분석을 위해)
         uploaded = request.POST.get('upload_data', None)
@@ -43,12 +45,26 @@ def ajax_csv(request):
         df = df.dropna()
         
         df_anal = stock_holding_income(df)
-        # get_income_static(df_anal)
-        # print(df_anal)
 
-        msg = get_analyze(df_anal)
-        # return HttpResponse(json.dumps(uploaded_list), content_type="application/json") # dict -> str
-        return HttpResponse(msg)
+        sell_all, half_sell, sell_div, final_sell = get_analyze(df_anal)
+        
+        data_dict['sell_all'] = sell_all
+        data_dict['half_sell'] = half_sell
+        data_dict['sell_div'] = sell_div
+        data_dict['final_sell'] = final_sell
+        data_dict['length'] = len(df_anal)
+        data_dict['one_day_max'] = max(df_anal['one_day'])
+        data_dict['one_day_min'] = min(df_anal['one_day'])
+        data_dict['seven_days_max'] = max(df_anal['seven_days'])
+        data_dict['seven_days_min'] = min(df_anal['seven_days'])
+        data_dict['fourteen_days_max'] = max(df_anal['fourteen_days'])
+        data_dict['fourteen_days_min'] = min(df_anal['fourteen_days'])
+        data_dict['win_percentage'] = get_income_static(df_anal)
+
+        # return render(request, 'main.html', data_dict)
+        json_dict = json.dumps(data_dict) 
+        # print(type(json_dict))
+        return HttpResponse(json_dict)
         
 
 def stock_holding_income(df):
@@ -137,8 +153,8 @@ def stock_holding_income(df):
     for i in range(len(cols)):
         df[result_cols[i]] = df[cols[i]].apply(lambda x : 1 if x > 0 else 0)
     
-    print('done_income')
     return df
+
 #box plot
 def get_chart(df):
 
@@ -165,10 +181,9 @@ def get_income_static(df):
     #columns 와 rows 변경    
     result = result.T
     result['percent'] = result[1] / (result[1] + result[0])
-
-    print('1일 경우 win, 0이면 loss')
-    print(result)
-    print('')
+    
+    result = result.fillna(1)
+    return int(np.mean(result['percent']) * 100)
     
 
 def get_correated_index(df):
@@ -178,16 +193,16 @@ def get_correated_index(df):
         total = len(df[(df[col] == 1) & (df['index_status'] == 1)])
         if total > 0:
             effected = (df[1][n] - total) / df[1][n]
-            print(f'\n## {col}조건으로 검색된 종목과 코스피 지수와의 선형성을 띄는 종목의 비율은 {np.round(effected, 3)}입니다 ##')
-            print('')
+            # print(f'\n## {col}조건으로 검색된 종목과 코스피 지수와의 선형성을 띄는 종목의 비율은 {np.round(effected, 3)}입니다 ##')
+            # print('')
         else:
-            print(f'\n## {col}조건으로 검색된 종목과 코스피 지수와의 선형성을 띄는 종목의 비율이 없습니다 - 즉 독립적 ##')
+            # print(f'\n## {col}조건으로 검색된 종목과 코스피 지수와의 선형성을 띄는 종목의 비율이 없습니다 - 즉 독립적 ##')
             print('')
         
 def get_analyze(df):
     anal = df.describe()
     anal.drop(['one_day_trade_result', 'seven_trade_result', 'fourteen_trade_result', 'index_status'], axis = 1, inplace=True)
-    print(anal)
+    # print(anal)
     #만약 123에서 50%값이 5%이상이면 손익량 20% 감소 75%가 5% 이상이면 10% 감소 기본값은 80%
     cols = ['one_day', 'seven_days', 'fourteen_days']
 
@@ -215,15 +230,16 @@ def get_analyze(df):
 
         n +=1
 
-    if half_sell < 0 or final_sell < 0:
-        print('수익이 나지 않는 조건식입니다. 다른 조건식의 종목들을 분석해주세요')
-        print('')
-    else:
-        print('-----조건식 종목 손익 진단-----')
-        print('')
+    # if half_sell < 0 or final_sell < 0:
+    #     print('수익이 나지 않는 조건식입니다. 다른 조건식의 종목들을 분석해주세요')
+    #     print('')
+    # else:
+    #     print('-----조건식 종목 손익 진단-----')
+    #     print('')
 
-        msg = (f'손절라인은 {sell_all}%에 도달할 때 적정선으로 보이며 \n1차 손익가는 {half_sell}%에 도달할 때 보유량 대비 {sell_div}%를 매도\n남은 보유량은 손익가가 {final_sell}%에 도달할 때 전량 매도하는 것이 적절해보입니다.')
-        return msg
+    msg = (f'손절라인은 {sell_all}%에 도달할 때 적정선으로 보이며 \n1차 손익가는 {half_sell}%에 도달할 때 보유량 대비 {sell_div}%를 매도\n남은 보유량은 손익가가 {final_sell}%에 도달할 때 전량 매도하는 것이 적절해보입니다.')
+    # return msg
+    return sell_all, half_sell, sell_div, final_sell
 
 def get_total(df):
     get_chart(df)
