@@ -55,7 +55,6 @@
                             <div class="col-12 d-flex mb-2" style="padding: 0px 15px; justify-content: center;">
                                 <label for="upload_file" style="margin: 0;">업로드</label>
                                 <input type="file" id="upload_file" accept=".csv" name="upload_file"> 
-                                <button class="btn btn-primary loading" id="loading_button">실행</button>
                             </div>
                         </div>
                         <div class='file_text'>
@@ -131,21 +130,21 @@
                             </div>
                             <div>
                                 <div class="d-flex explain_box">
-                                    <div class="col-4 explain_text">
+                                    <div class="col-6 explain_text">
                                         최대 수익
                                     </div>
-                                    <div class="col-4 explain_prct">
-                                        80<span style="font-size: 13px; padding-left: 4px;">%</span>
+                                    <div class="col-6 explain_prct">
+                                        <span id="one_day_max">??</span> <span style="font-size: 13px; padding-left: 4px;">%</span>
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <div class="d-flex explain_box">
-                                    <div class="col-4 explain_text">
+                                    <div class="col-6 explain_text">
                                         최대 손실
                                     </div>
-                                    <div class="col-4 explain_prct">
-                                        -80<span style="font-size: 13px; padding-left: 4px;">%</span>
+                                    <div class="col-6 explain_prct">
+                                        <span id="one_day_min">??</span> <span style="font-size: 13px; padding-left: 4px;">%</span>
                                     </div>
                                 </div>
                             </div>
@@ -156,21 +155,21 @@
                             </div>
                             <div>
                                 <div class="d-flex explain_box">
-                                    <div class="col-4 explain_text">
+                                    <div class="col-6 explain_text">
                                         최대 수익
                                     </div>
-                                    <div class="col-4 explain_prct">
-                                        80<span style="font-size: 13px; padding-left: 4px;">%</span>
+                                    <div class="col-6 explain_prct">
+                                        <span id="seven_days_max">??</span> <span style="font-size: 13px; padding-left: 4px;">%</span>
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <div class="d-flex explain_box">
-                                    <div class="col-4 explain_text">
+                                    <div class="col-6 explain_text">
                                         최대 손실
                                     </div>
-                                    <div class="col-4 explain_prct">
-                                        -80<span style="font-size: 13px; padding-left: 4px;">%</span>
+                                    <div class="col-6 explain_prct">
+                                        <span id="seven_days_min">??</span><span style="font-size: 13px; padding-left: 4px;">%</span>
                                     </div>
                                 </div>
                             </div>
@@ -181,21 +180,21 @@
                             </div>
                             <div>
                                 <div class="d-flex explain_box">
-                                    <div class="col-4 explain_text">
+                                    <div class="col-6 explain_text">
                                         최대 수익
                                     </div>
-                                    <div class="col-4 explain_prct">
-                                        80<span style="font-size: 13px; padding-left: 4px;">%</span>
+                                    <div class="col-6 explain_prct">
+                                        <span id="fourteen_days_max">??</span><span style="font-size: 13px; padding-left: 4px;">%</span>
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <div class="d-flex explain_box">
-                                    <div class="col-4 explain_text">
+                                    <div class="col-6 explain_text">
                                         최대 손실
                                     </div>
-                                    <div class="col-4 explain_prct">
-                                        -80<span style="font-size: 13px; padding-left: 4px;">%</span>
+                                    <div class="col-6 explain_prct">
+                                        <span id="fourteen_days_min">??</span><span style="font-size: 13px; padding-left: 4px;">%</span>
                                     </div>
                                 </div>
                             </div>
@@ -209,7 +208,7 @@
                                 추천 손절 라인
                             </div>
                             <div class="recommend_info">
-                                1.5<span class="recommend_txt">%</span>
+                                <span id="sell_all">??</span><span class="recommend_txt">%</span>
                             </div>
                             <div class="sub_recommend"  style="background: #c56565;">
                                 100<span>%</span> 전량 매도
@@ -220,10 +219,10 @@
                                 1차 분할 매도
                             </div>
                             <div class="recommend_info">
-                                12<span class="recommend_txt">EA</span>
+                                <span id="half_sell">??</span><span class="recommend_txt">%</span>
                             </div>
                             <div class="sub_recommend">
-                                80<span>%</span> 분할 매도
+                                <span id="sell_div">??</span><span>%</span> 분할 매도
                             </div>
                         </div>
                         <div class="col-3" style="">
@@ -231,7 +230,7 @@
                                 최종 분할 매도
                             </div>
                             <div class="recommend_info">
-                                12<span class="recommend_txt">EA</span>
+                                <span id="final_sell">??</span><span class="recommend_txt">%</span>
                             </div>
                             <div class="sub_recommend"  style="background: #c56565;">
                                 100<span>%</span> 전량 매도
@@ -272,20 +271,62 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     
     <script>
-        //파일 업로드 버튼 누르면 handleFileSelect 함수 호출 
+        // 파일 업로드 버튼 누르면 handleFileSelect 함수 호출 
         $(function init(){
             document.getElementById('upload_file').addEventListener('change', handleFileSelect, false);
         });
 
         function handleFileSelect(event){
             const reader = new FileReader()
-            // alert('test')
             //handleFileLoad 함수 호출
             reader.onload = handleFileLoad;
             reader.readAsText(event.target.files[0])
             
         }
 
+        function handleFileLoad(event){
+            let uploaded = event.target.result;
+            //csv형식 data를 json으로 변형
+            let uploaded_data = csvJSON(uploaded)
+            // alert(uploaded_data)
+
+            $.ajax({
+                //요청이 전송될 URL 주소
+                url: 'ajax_csv/',
+                type: "POST",
+                dataType: "text",
+                data: {
+                    'upload_data': uploaded_data,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                
+                success : function(data) {
+                    jobj = JSON.parse(data)
+                    // console.log(jobj.win_percentage)
+
+                    $('#sell_all').html(jobj.sell_all)
+                    $('#half_sell').html(jobj.half_sell)
+                    $('#sell_div').html(jobj.sell_div)
+                    $('#final_sell').html(jobj.final_sell)
+                    $('#length').html(jobj.length)
+                    $('#one_day_max').html(jobj.one_day_max)
+                    $('#one_day_min').html(jobj.one_day_min)
+                    $('#seven_days_max').html(jobj.seven_days_max)
+                    $('#seven_days_min').html(jobj.seven_days_min)
+                    $('#fourteen_days_max').html(jobj.fourteen_days_max)
+                    $('#fourteen_days_min').html(jobj.fourteen_days_min)
+                    $('#win_percentage').html(jobj.win_percentage)
+                    
+
+                },
+                error:function(request,status,error){
+                    // $('.static_box').html(request.responseText)
+                    // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
+                    }
+                });
+            }
+            
         //csv 데이터 형식을 json으로 변경 
         function csvJSON(csv){
             var lines = csv.split("\n");
@@ -302,43 +343,13 @@
             return JSON.stringify(result); //JSON
         }
 
-        function handleFileLoad(event){
-
-            let uploaded = event.target.result;
-            //csv형식 data를 json으로 변형
-            let uploaded_data = csvJSON(uploaded)
-            // alert(uploaded_data)
-            
-            $.ajax({
-                //요청이 전송될 URL 주소
-                url: 'ajax_csv/',
-                type: "POST",
-                dataType: "text",
-                data: {
-                    'upload_data': uploaded_data,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                headers: { "X-CSRFToken": "{{ csrf_token }}" },
-                
-                success : function(data) {
-                    jobj = JSON.parse(data)
-                    console.log(jobj.win_percentage)
-                    // alert(data.win_percentage)
-                    $('#win_percentage').html(jobj.win_percentage)
-                    // const port_data = JSON.stringify(data);
-                    // var port_data_json = JSON.parse(port_data);
-                },
-                error:function(request,status,error){
-                    // $('.static_box').html(request.responseText)
-                    // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error)
-                    }
-                });
-            }
-
     </script>
 
     <style>
-
+        .leading_text{
+            font-weight: bold;
+            color: #ff4545;
+        }
     </style>
 
 </body>

@@ -53,12 +53,12 @@ def ajax_csv(request):
         data_dict['sell_div'] = sell_div
         data_dict['final_sell'] = final_sell
         data_dict['length'] = len(df_anal)
-        data_dict['one_day_max'] = max(df_anal['one_day'])
-        data_dict['one_day_min'] = min(df_anal['one_day'])
-        data_dict['seven_days_max'] = max(df_anal['seven_days'])
-        data_dict['seven_days_min'] = min(df_anal['seven_days'])
-        data_dict['fourteen_days_max'] = max(df_anal['fourteen_days'])
-        data_dict['fourteen_days_min'] = min(df_anal['fourteen_days'])
+        data_dict['one_day_max'] = np.round(max(df_anal['one_day']),1)
+        data_dict['one_day_min'] = np.round(min(df_anal['one_day']),1)
+        data_dict['seven_days_max'] = np.round(max(df_anal['seven_days']),1)
+        data_dict['seven_days_min'] = np.round(min(df_anal['seven_days']),1)
+        data_dict['fourteen_days_max'] = np.round(max(df_anal['fourteen_days']),1)
+        data_dict['fourteen_days_min'] = np.round(min(df_anal['fourteen_days']),1)
         data_dict['win_percentage'] = get_income_static(df_anal)
 
         # return render(request, 'main.html', data_dict)
@@ -132,6 +132,7 @@ def stock_holding_income(df):
             print('error occured')
             pass
         
+
         #1일 7일 보유 수익률 확인
         day_after.append(one_day_income)
         seven_days_list.append(seven_days_income)
